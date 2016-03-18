@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html ng-app="technodeApp">
+  <head>
+    <meta charset="utf-8">
+    <title>technode</title>
+    <link rel="stylesheet" href="/components/bootstrap/dist/css/bootstrap.css">
+    <script src="/socket.io/socket.io.js" charset="utf-8"></script>
+    <script src="/components/jquery/dist/jquery.js" charset="utf-8"></script>
+    <script src="/components/bootstrap/dist/js/bootstrap.js" charset="utf-8"></script>
+    <script src="/components/angular/angular.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="#" class="navbar-brand">technode</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="container" style="margin-top:100px">
+      <div class="col-md-12">
+        <div class="panel panel-default room" ng-controller="RoomCtrl">
+          <div class="panel-heading room-header">technode</div>
+          <div class="panel-body room-content">
+            <div class="list-group messages" auto-scorll-to-bottom>
+              <div class="list-group-item message" ng-repeat="mes in messages">
+                xx: {{mes}}
+              </div>
+
+            </div>
+            <form class="message-creator" ng-controller="MessageCreatorCtrl">
+              <div class="form-group">
+                <textarea
+                  required
+                  class="form-control message-input"
+                  placeholder="ctrl- enter to quick send"
+                  ng-model="newMessage"
+                  ctrl-enter-break-line="createMessage()"
+                  >
+
+                </textarea>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </body>
+  <script src="/ng/app.js" charset="utf-8"></script>
+  <script src="/ng/directives.js" charset="utf-8"></script>
+  <script src="/ng/services.js" charset="utf-8"></script>
+  <script src="/ng/ctrls.js" charset="utf-8"></script>
+
+
+</html>

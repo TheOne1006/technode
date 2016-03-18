@@ -1,0 +1,20 @@
+{
+  "name": "technode",
+  "version": "0.0.0",
+  "authors": [
+    "TheOne1006 <297190869@qq.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "static/components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.6",
+    "angular": "~1.5.1"
+  }
+}
