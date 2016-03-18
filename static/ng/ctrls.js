@@ -24,6 +24,22 @@ angular
       $scope.newMessage = '';
     }
   })
-  .controller('LoginCtrl', function ($scope) {
+  .controller('LoginCtrl', function ( $scope, $http, $location) {
+    $scope.email = '';
+
+    $scope.login = function () {
+      $http({
+        url:'/api/login',
+        method: 'POST',
+        data: {
+          email: $scope.email
+        }
+      }).success(function (user) {
+        console.log(user);
+        $scope.$emit('login', user);
+      }).error(function () {
+        $location.path('/login');
+      })
+    };
 
   });
