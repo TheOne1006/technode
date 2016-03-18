@@ -24,3 +24,6 @@ angular
       $scope.newMessage = '';
     }
   })
+  .controller('LoginCtrl', function ($scope) {
+
+  });
