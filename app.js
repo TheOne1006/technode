@@ -26,15 +26,16 @@ app.use(session({
   resave: true,
   saveUninitialized: false,
   cookie: {
-    maxAge: 60 * 1000
+    maxAge: 60 * 1000 *60
   }
 }));
 
 app.get('/api/validate', function (req, res) {
   var _userId = req.session._userId;
+  console.log('session id:'+_userId);
 
   if(_userId) {
-    Controllers.User.findUserById(userId, function (err, user) {
+    Controllers.User.findUserById(_userId, function (err, user) {
       if(err) {
         res.status(401);
         res.json({msg: err})

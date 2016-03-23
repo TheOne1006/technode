@@ -6,16 +6,18 @@ exports.findUserById = function (_userId, cb) {
   db
     .User
     .findOne({
-      id: _userId
+      _id: _userId
     }, cb);
 };
 
 exports.findByEmailOrCreate = function (email, cb) {
+
   db
     .User
     .findOne({
       email:email
     }, function( err, user){
+      console.log(user);
       if(user) {
         cb(null, user);
       } else {
