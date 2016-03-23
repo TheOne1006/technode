@@ -14,6 +14,7 @@ var app = express();
 
 var sinneCookieParase = cookieParser('theone.io');
 var sessionStore = new MongoStore({
+  reapInterval: 60000 * 10,
   url : 'mongodb://root:root@ds029630.mlab.com:29630/protheone'
 });
 
@@ -68,10 +69,17 @@ app.post('/api/login', function (req, res) {
         res.json({msg: err});
       } else {
         req.session._userId = user._id;
-        res.json(user);
+        Controllers.User.online(user._id, function (err, user) {
+          if(err) {
+            res.status(500);
+            res.json({mgs:err});
+          } else {
+            res.json(user);
+          }
+          res.end();
+        })
       }
-      res.end();
-    })
+    });
   } else {
     res.status(403)
     res.end();
@@ -110,6 +118,8 @@ io.set('authorization', function (handshakeData, accept) {
           accept(err.message, false);
         } else {
           handshakeData.session = session;
+          console.log('handshakeData');
+          // console.log(handshakeData.session);
           if(session._userId) {
             accept(null, true);
             console.log('认证成功');
@@ -120,15 +130,54 @@ io.set('authorization', function (handshakeData, accept) {
       })
     }
   });
+
 });
 
-  io.sockets.on('connection', function (socket) {
-    socket.on('getAllMessages', function () {
-      socket.emit('allMessages', messages);
+  io.sockets.on('connection', function (_socket) {
+    /**
+     * 基于_socket 的上线 下线
+     */
+     console.log('connection');
+
+     console.log(_socket.handshake);
+
+    _socket.on('getAllMessages', function () {
+      _socket.emit('allMessages', messages);
     });
 
-    socket.on('messages.create', function (message) {
+    _socket.on('messages.create', function (message) {
       messages.push(message);
       io.sockets.emit('messageAdded', message);
     });
+
+    _socket.on('getRoom', function () {
+      Controllers.User.getOnlineUsers(function (err, users) {
+        if(err) {
+          _socket.emit('err', {msg:err});
+        } else {
+          _socket.emit('roomData', {
+            name:'technode',
+            users: users,
+            messages: messages
+          });
+        }
+      })
+    })
+
   });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//

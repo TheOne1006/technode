@@ -29,3 +29,48 @@ exports.findByEmailOrCreate = function (email, cb) {
       }
     });
 }
+
+exports.online = function (_userId, cb) {
+  db
+    .User
+    .findOneAndUpdate({
+      _id:_userId
+    },{
+      $set: {
+        online: true
+      }
+    }, cb);
+};
+
+
+exports.offline = function (_userId, cb) {
+  db
+    .User
+    .findOneAndUpdate({
+      _id:_userId
+    },{
+      $set: {
+        online: false
+      }
+    }, cb);
+};
+
+exports.getOnlineUsers = function (cb) {
+  db
+    .User
+    .find({
+      online: true
+    },cb);
+}
+
+
+
+
+
+
+
+
+
+
+
+//

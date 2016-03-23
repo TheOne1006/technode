@@ -12,6 +12,13 @@ angular
     socket.on('messageAdded', function (message) {
       $scope.messages.push(message)
     });
+
+    socket.on('roomData', function (room) {
+      console.log(room);
+      $scope.room = room;
+    });
+
+    socket.emit('getRoom');
   })
   .controller('MessageCreatorCtrl', function ($scope, socket) {
     $scope.newMessage = '';
