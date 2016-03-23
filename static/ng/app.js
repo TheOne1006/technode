@@ -21,8 +21,7 @@ angular.module('technodeApp')
     }).success(function (user) {
       console.log('success');
       $rootScope.me = user;
-      console.log(user);
-      // $location.path('/');
+      $location.path('/');
     }).error(function () {
       $location.path('/login');
     });

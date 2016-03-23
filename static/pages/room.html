@@ -4,7 +4,8 @@
     <div class="panel-body room-content">
       <div class="list-group messages" auto-scorll-to-bottom>
         <div class="list-group-item message" ng-repeat="mes in messages">
-          xx: {{mes}}
+          <img ng-src="{{mes.creator.avatarUrl}}" title="{{mes.creator.name}}" class="img-rounded" />
+          {{mes.creator.name}} : {{mes.message}}
         </div>
 
       </div>

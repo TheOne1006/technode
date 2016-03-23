@@ -20,7 +20,10 @@ angular
         return
       }
       console.log($scope.newMessage);
-      socket.emit('createMessage', $scope.newMessage);
+      socket.emit('messages.create', {
+        message: $scope.newMessage,
+        creator: $scope.me
+      });
       $scope.newMessage = '';
     }
   })

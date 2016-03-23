@@ -6,9 +6,16 @@ var bodyParser = require('body-parser');
 var session    = require('express-session');
 var socket = require('socket.io');
 
+var MongoStore = require('connect-mongo')(session);
+
 var Controllers = require('./controllers');
 
 var app = express();
+
+var sinneCookieParase = cookieParser('theone.io');
+var sessionStore = new MongoStore({
+  url : 'mongodb://root:root@ds029630.mlab.com:29630/protheone'
+});
 
 var port = process.env.PORT || 3000;
 
@@ -27,7 +34,8 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     maxAge: 60 * 1000 *60
-  }
+  },
+  store: sessionStore
 }));
 
 app.get('/api/validate', function (req, res) {
@@ -91,14 +99,36 @@ var server = app.listen(port , function () {
 
 var io = socket.listen(server);
 
-io.sockets.on('connection', function (socket) {
-  socket.on('getAllMessages', function () {
-    socket.emit('allMessages', messages);
+io.set('authorization', function (handshakeData, accept) {
+  sinneCookieParase(handshakeData, {}, function (err) {
+    if(err) {
+      accept(err, false);
+    }else{
+      var connectSid =  handshakeData.signedCookies['connect.sid'];
+      sessionStore.get(connectSid, function (err, session) {
+        if(err) {
+          accept(err.message, false);
+        } else {
+          handshakeData.session = session;
+          if(session._userId) {
+            accept(null, true);
+            console.log('认证成功');
+          }else {
+            accept('No login');
+          }
+        }
+      })
+    }
   });
-
-  socket.on('createMessage', function (message) {
-    messages.push(message);
-    io.sockets.emit('messageAdded', message);
-  });
-
 });
+
+  io.sockets.on('connection', function (socket) {
+    socket.on('getAllMessages', function () {
+      socket.emit('allMessages', messages);
+    });
+
+    socket.on('messages.create', function (message) {
+      messages.push(message);
+      io.sockets.emit('messageAdded', message);
+    });
+  });
